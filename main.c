@@ -32,3 +32,42 @@ Switch_Off(LED_A);
 os_dly_wait (100);
 }
 }
+/*----------------------------------------------------------------------------
+* Task 2 'lcd': LCD Control task
+*---------------------------------------------------------------------------*/
+__task void lcd (void) {
+for (;;) {
+GLCD_SetBackColor(Blue); /* Set the Text Color */
+GLCD_SetTextColor(White); /* Set the Text Color */
+GLCD_DisplayString(0, 0, __FI, " ECE ");
+GLCD_DisplayString(1, 0, __FI, " RVCE ");
+GLCD_DisplayString(2, 0, __FI, " MGRJH ");
+os_dly_wait (100);
+GLCD_SetBackColor(Blue); /* Set the Text Color */
+GLCD_SetTextColor(Red); /* Set the Text Color */
+GLCD_DisplayString(0, 0, __FI, " ECE ");
+GLCD_DisplayString(1, 0, __FI, " RVCE ");
+GLCD_DisplayString(2, 0, __FI, " MGRJH ");
+os_dly_wait (100);
+}
+}
+/*----------------------------------------------------------------------------
+* Task 'init': Initialize
+*---------------------------------------------------------------------------*/
+__task void init (void) {
+t_phaseA = os_tsk_create (phaseA, 0); /* start task phaseA */
+t_lcd = os_tsk_create (lcd, 0); /* start task lcd */
+os_tsk_delete_self ();
+}
+/*----------------------------------------------------------------------------
+* Main: Initialize and start RTX Kernel
+*---------------------------------------------------------------------------*/
+int main (void) {
+LED_Init(); /* Initialize the LEDs */
+GLCD_Init(); /* Initialize the GLCD */
+GLCD_Clear(White); /* Clear the GLCD */
+os_sys_init(init); /* Initialize RTX and start init */
+}
+/*----------------------------------------------------------------------------
+* end of file
+*---------------------------------------------------------------------------*/
